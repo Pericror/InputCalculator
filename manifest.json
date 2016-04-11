@@ -1,0 +1,34 @@
+{
+  "manifest_version": 2,
+  "name":    "Input Calculator",
+  "version": "1.0",
+  "offline_enabled": false,
+
+  "background": {
+    "persistent": false,
+    "scripts": ["background.js"]
+  },
+
+  "content_scripts": [{
+	"matches": [ "http://*.service-now.com/*", "https://*.service-now.com/*" ],
+    "js":         ["content.js"],
+    "run_at":     "document_idle",
+    "all_frames": false
+  }],
+
+  "page_action": {
+    "default_title": "Input Calculator",
+    "default_icon": {
+        "19": "img/icon16.png",
+        "38": "img/icon48.png"
+    },
+    "default_popup": "popup.html"
+  },
+
+  "permissions": [
+    "activeTab"
+  ],
+  "icons": { "16": "img/icon16.png",
+           "48": "img/icon48.png",
+          "128": "img/icon128.png" }
+}

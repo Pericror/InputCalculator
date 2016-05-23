@@ -1,17 +1,111 @@
+<!-- TODO: need to make buttons scalable, autoformat as grid, so if we have 20 buttons page not too big -->
+
 <!DOCTYPE html>
 <html>
     <head>
     <script type="text/javascript" src="popup.js"></script>
+    <style>
+    body {
+        background-color: black;
+        color: white;
+    }
+    /* Class styles */
+    .content {
+        width: 250x;
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+    .operation {
+        background-color: #2699E7;
+        border: none;
+        background-size: 30px;
+        opacity: .85;
+        margin-left: 15px;
+        margin-right: 15px;
+        margin-top: 15px;
+        border-radius: 3px;
+        font-weight: bold;
+        white-space:pre-wrap;
+    }
+    
+    .operator {
+        width: 30px;
+        height: 30px;
+    }
+    .operation:hover {
+        opacity: 1;
+    }
+    .add {
+        background-image: url(img/add.png);
+    }
+    .subtract {
+        background-image: url(img/subtract.png);
+    }
+    .multiply {
+        background-image: url(img/multiply.png);
+    }
+    .divide {
+        background-image: url(img/divide.png);
+    }
+    .equals {
+        background-image: url(img/equals.png);
+    }
+    .clicked {
+        -webkit-box-shadow: inset 1x 2px 2px 0 #34393C;
+        -moz-box-shadow: inset 1px 2px 2px 0 #34393C;
+        box-shadow: inset 1px 2px 2px 0 #34393C;
+    }
+    .operations {
+        width: 250px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+    .inactive {
+        background-color: grey;
+    }
+    .inactive:hover {
+        opacity: .85;
+    }
+    /* ID Styles */
+    #inputField {
+        text-align: right;
+        width:300px;
+        font-size: 1.5em;
+    }
+    </style>
     </head>
     <body>
-        <h3 style="font-weight:bold; text-align:center;">Input Calculator</h3>
-        <table id="inputMap">
-            <thead>
-                <tr>
-                    <td>Input Name</td><td>Input ID</td><td>Input Value</td>
-                </tr>
-            </thead>
-        </table>
-        <button id="calculate">Calculate</button>
+        <div class="content">
+            <h3 style="font-weight:bold; text-align:center;">Input Calculator</h3>
+            <br/>
+            <input type="text" id="inputField" readonly></input>            
+            <div class="operations">
+                <button id="add" data-value="+" class="add operation operator"></button>
+                <button id="subtract" data-value="-" class="subtract operation operator"></button>
+                <button id="multiply" data-value="*" class="multiply operation operator"></button>
+                <button id="divide" data-value="/" class="divide operation operator"></button>
+                <button id="lparen" data-value="(" class="rparen operation operator">(</button>
+                <button id="rparen" data-value=")" class="lparen operation operator">)</button>
+                <button id="delete" data-value="DEL" class="operation operator">DEL</button>
+                <button id="clear" data-value="CLEAR" class=operation operator">CLEAR</button>
+                <button id="calculate" data-value="=" class="equals operation operator"></button>
+            </div>
+            <div id="inputButtons" class="operations"></div>
+            <br/>
+            <button id="sendOutput" class="operation">Send Output to:</button>
+            <select id="outputDropdown" class="dropdown">
+            </select>
+            <br>
+            For Debug Only:
+            <table id="inputMap">
+                <thead>
+                    <tr>
+                        <td>Input Name</td><td>Input ID</td><td>Input Value</td>
+                    </tr>
+                </thead>
+            </table>
+        
+        </div>      
     </body>
 </html>

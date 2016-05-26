@@ -104,6 +104,18 @@ function operatorClick() {
             toggleOutput(true);
             expected_input = 1;
             break;
+        case "(":
+            if (expected_input == 0) {
+                inputField.value += " " + operatorValue;
+                expected_input = 0;
+            }
+            break;
+        case ")":
+            if (expected_input == 1) {
+                inputField.value += " " + operatorValue;
+                expected_input = 1;
+            }
+            break;
         case "+":
         case "-":
         case "/":

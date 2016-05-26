@@ -108,7 +108,7 @@ function operatorClick() {
         case "-":
         case "/":
         case "*":
-            if(inputField.value != "" && expected_input = 1)
+            if(inputField.value != "" && expected_input == 1)
             {
                 inputField.value += " " + operatorValue;
                 expected_input = 0;

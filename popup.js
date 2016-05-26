@@ -52,6 +52,7 @@ function calculateInput() {
     console.log("popup.js > calculateInput()");
     var calculate = document.getElementById('inputField').value;
     console.log(calculate[0]);
+    console.log(calculate);
     var result = "";
     try {
         result = eval(calculate);

@@ -1,4 +1,5 @@
-var click_num = false;
+/* expected_input = 0 for expecting a number/thing, 1 for expecting an operator*/
+var expected_input = 0;
 
 // Handles input info from the content script
 function handleInputInfo(inputInfo) {
@@ -101,40 +102,44 @@ function operatorClick() {
         case "=":
             calculateInput();
             toggleOutput(true);
-            click_num = false;
+            expected_input = 1;
             break;
         case "+":
         case "-":
         case "/":
         case "*":
-            if(inputField.value != "")
+            if(inputField.value != "" && expected_input = 1)
             {
                 inputField.value += " " + operatorValue;
+                expected_input = 0;
             }
-            click_num = false;
             break;            
         case "DEL":
             var lastOperation = inputField.value.lastIndexOf(" ");
             if(lastOperation > -1)
             {
                 inputField.value = inputField.value.substr(0,lastOperation);
+                if (expected_input == 0) {
+                    expected_input = 1;
+                } else {
+                    expected_input = 0;
+                }
             }
-            click_num = false;
             break;
         case "CLEAR":
             inputField.value = "";
-            click_num = false;
+            expected_input = 0;
             break;
         default:
             if(inputField.value[0] != " ")
             {
                 inputField.value = ""; //clear user calculated value
-                click_num = false; // ???
+                expected_input = 0;
                 toggleOutput(false);
             }
-            if (!click_num) {
+            if (expected_input == 0) {
                 inputField.value += " " + operatorValue;
-                click_num = true;
+                expected_input = 1;
             }
             break;
     }

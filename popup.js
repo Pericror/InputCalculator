@@ -1,3 +1,5 @@
+var click_num = false;
+
 // Handles input info from the content script
 function handleInputInfo(inputInfo) {
     console.log(inputInfo);
@@ -8,6 +10,7 @@ function handleInputInfo(inputInfo) {
     var sortedInputInfo = Object.keys(inputInfo).sort();
     for( var i = 0; i < sortedInputInfo.length; i++)
     {
+        //table start logic
         var row = table.insertRow(table.rows.length);
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
@@ -15,6 +18,7 @@ function handleInputInfo(inputInfo) {
         cell1.innerHTML = sortedInputInfo[i];
         cell2.innerHTML = inputInfo[sortedInputInfo[i]]['id'];
         cell3.innerHTML = inputInfo[sortedInputInfo[i]]['value'];
+        //table end logic
         
         var inputButton = document.createElement('button');
         inputButton.className = 'operation';
@@ -97,6 +101,7 @@ function operatorClick() {
         case "=":
             calculateInput();
             toggleOutput(true);
+            click_num = false;
             break;
         case "+":
         case "-":
@@ -106,6 +111,7 @@ function operatorClick() {
             {
                 inputField.value += " " + operatorValue;
             }
+            click_num = false;
             break;            
         case "DEL":
             var lastOperation = inputField.value.lastIndexOf(" ");
@@ -113,17 +119,23 @@ function operatorClick() {
             {
                 inputField.value = inputField.value.substr(0,lastOperation);
             }
+            click_num = false;
             break;
         case "CLEAR":
             inputField.value = "";
+            click_num = false;
             break;
         default:
             if(inputField.value[0] != " ")
             {
                 inputField.value = ""; //clear user calculated value
+                click_num = false; // ???
                 toggleOutput(false);
             }
-            inputField.value += " " + operatorValue;
+            if (!click_num) {
+                inputField.value += " " + operatorValue;
+                click_num = true;
+            }
             break;
     }
 }

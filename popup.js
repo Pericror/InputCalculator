@@ -51,8 +51,6 @@ sanitize the input during calculation, either here or content.js
 function calculateInput() {
     console.log("popup.js > calculateInput()");
     var calculate = document.getElementById('inputField').value;
-    console.log(calculate[0]);
-    console.log(calculate);
     var result = "";
     try {
         result = eval(calculate);

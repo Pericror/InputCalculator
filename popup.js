@@ -34,7 +34,8 @@ function handleInputInfo(inputInfo) {
         //table end logic
         
         var inputButton = document.createElement('button');
-        inputButton.className = 'operation dynamicbtn';
+        inputButton.className = 'operation';
+        inputButton.style.color = 'red';
         inputButton.setAttribute('data-value',inputInfo[sortedInputInfo[i]]['value']);
         inputButton.textContent = sortedInputInfo[i] + '\n(' + inputInfo[sortedInputInfo[i]]['value'] + ')'
         if( inputInfo[sortedInputInfo[i]]['value'] != "" )

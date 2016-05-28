@@ -163,6 +163,7 @@ function operatorClick() {
                 toggleOutput(false);
             }
             if (expected_input == 0) {
+                console.log("clicked a number");
                 inputField.value += " " + operatorValue;
                 expected_input = 1;
             }

@@ -12,6 +12,15 @@ function handleInputInfo(inputInfo) {
     var inputButtons = document.getElementById('inputButtons');
     var outputTarget = document.getElementById('outputDropdown');
     var sortedInputInfo = Object.keys(inputInfo).sort();
+    var longestCharNum = 0;
+    for( var j = 0; j < sortedInputInfo.length; j++) {
+        var maxkeyval = Math.max(sortedInputInfo[j].length, inputInfo[sortedInputInfo[j]]['value'].length);
+        if (maxkeyval > longestCharNum) {
+            longestCharNum = maxkeyval;
+        }
+    }
+    console.log(longestCharNum);
+
     for( var i = 0; i < sortedInputInfo.length; i++)
     {
         //table start logic

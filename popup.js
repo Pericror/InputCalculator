@@ -35,7 +35,7 @@ function handleInputInfo(inputInfo) {
         
         var inputButton = document.createElement('button');
         inputButton.className = 'operation';
-        inputButton.style.color = 'red';
+        inputButton.style.width = longestCharNum.toString() + "em";
         inputButton.setAttribute('data-value',inputInfo[sortedInputInfo[i]]['value']);
         inputButton.textContent = sortedInputInfo[i] + '\n(' + inputInfo[sortedInputInfo[i]]['value'] + ')'
         if( inputInfo[sortedInputInfo[i]]['value'] != "" )

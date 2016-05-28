@@ -61,10 +61,12 @@ function calculateInput() {
         }
         catch(err) {
             console.log(err);
+            expected_input = 0;
             inputValid = false;
         }
     } else {
         result = "Mismatched Parentheses Error";
+        expected_input = 0;
         inputValid = false;
     }
     numLeftParen = 0;
@@ -169,7 +171,7 @@ function operatorClick() {
                 //console.log("clear for some reason");
             }
             if (expected_input == 0) {
-                console.log("clicked a number");
+                //console.log("clicked a number");
                 inputField.value += " " + operatorValue;
                 expected_input = 1;
             }

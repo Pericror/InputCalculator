@@ -2,6 +2,7 @@
 var expected_input = 0;
 var numLeftParen = 0;
 var numRightParen = 0;
+var inputValid = true;
 
 // Handles input info from the content script
 function handleInputInfo(inputInfo) {
@@ -54,7 +55,7 @@ function calculateInput() {
     console.log("popup.js > calculateInput()");
     var calculate = document.getElementById('inputField').value;
     var result = "";
-    var inputValid = true;
+    inputValid = true;
     if (numLeftParen == numRightParen) {
         try {
             result = eval(calculate);
@@ -145,19 +146,22 @@ function operatorClick() {
             }
             break;            
         case "DEL":
-            var lastOperation = inputField.value.lastIndexOf(" ");
-            if(lastOperation > -1)
-            {
-                inputField.value = inputField.value.substr(0,lastOperation);
-                if (expected_input == 0) {
-                    expected_input = 1;
-                } else {
-                    expected_input = 0;
+            if (inputValid) {
+                var lastOperation = inputField.value.lastIndexOf(" ");
+                if(lastOperation > -1)
+                {
+                    inputField.value = inputField.value.substr(0,lastOperation);
+                    if (expected_input == 0) {
+                        expected_input = 1;
+                    } else {
+                        expected_input = 0;
+                    }
                 }
             }
             break;
         case "CLEAR":
             inputField.value = "";
+            inputValid = true;
             expected_input = 0;
             numLeftParen = 0;
             numRightParen = 0;
@@ -166,6 +170,7 @@ function operatorClick() {
             if(inputField.value[0] != " ")
             {
                 inputField.value = ""; //clear user calculated value
+                inputValid = true;
                 expected_input = 0;
                 toggleOutput(false);
                 //console.log("clear for some reason");

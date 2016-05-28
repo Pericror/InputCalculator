@@ -161,6 +161,7 @@ function operatorClick() {
                 inputField.value = ""; //clear user calculated value
                 expected_input = 0;
                 toggleOutput(false);
+                console.log("clear for some reason");
             }
             if (expected_input == 0) {
                 console.log("clicked a number");

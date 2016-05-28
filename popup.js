@@ -1,5 +1,7 @@
 /* expected_input = 0 for expecting a number/thing, 1 for expecting an operator*/
 var expected_input = 0;
+var numLeftParen = 0;
+var numRightParen = 0;
 
 // Handles input info from the content script
 function handleInputInfo(inputInfo) {
@@ -52,12 +54,19 @@ function calculateInput() {
     console.log("popup.js > calculateInput()");
     var calculate = document.getElementById('inputField').value;
     var result = "";
-    try {
-        result = eval(calculate);
+
+    if (numLeftParen == numRightParen) {
+        try {
+            result = eval(calculate);
+        }
+        catch(err) {
+            console.log(err);
+        }
+    } else {
+        result = "Mismatched Parentheses Error";
     }
-    catch(err) {
-        console.log(err);
-    }
+    numLeftParen = 0;
+    numRightParen = 0;
     document.getElementById('inputField').value = result;
 }
 
@@ -108,12 +117,14 @@ function operatorClick() {
             if (expected_input == 0) {
                 inputField.value += " " + operatorValue;
                 expected_input = 0;
+                numLeftParen++;
             }
             break;
         case ")":
             if (expected_input == 1) {
                 inputField.value += " " + operatorValue;
                 expected_input = 1;
+                numRightParen++;
             }
             break;
         case "+":
@@ -141,6 +152,8 @@ function operatorClick() {
         case "CLEAR":
             inputField.value = "";
             expected_input = 0;
+            numLeftParen = 0;
+            numRightParen = 0;
             break;
         default:
             if(inputField.value[0] != " ")

@@ -116,9 +116,9 @@ function operatorClick() {
     switch( operatorValue)
     {
         case "=":
+            expected_input = 1;
             calculateInput();
             toggleOutput(true);
-            expected_input = 1;
             break;
         case "(":
             if (expected_input == 0) {

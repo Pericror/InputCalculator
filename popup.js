@@ -54,19 +54,24 @@ function calculateInput() {
     console.log("popup.js > calculateInput()");
     var calculate = document.getElementById('inputField').value;
     var result = "";
-
+    var inputValid = true;
     if (numLeftParen == numRightParen) {
         try {
             result = eval(calculate);
         }
         catch(err) {
             console.log(err);
+            inputValid = false;
         }
     } else {
         result = "Mismatched Parentheses Error";
+        inputValid = false;
     }
     numLeftParen = 0;
     numRightParen = 0;
+    if (inputValid) {
+        result = " " + result ;
+    }
     document.getElementById('inputField').value = result;
 }
 
@@ -161,7 +166,7 @@ function operatorClick() {
                 inputField.value = ""; //clear user calculated value
                 expected_input = 0;
                 toggleOutput(false);
-                console.log("clear for some reason");
+                //console.log("clear for some reason");
             }
             if (expected_input == 0) {
                 console.log("clicked a number");

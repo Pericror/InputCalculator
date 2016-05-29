@@ -1,6 +1,9 @@
 /* operatorExpected = false for expecting an input value / paren, true for expecting an operator*/
 var operatorExpected = false;
 var lastButtonPressed = ""; // The data-value of the last button pressed
+var numLeftParen = 0;
+var numRightParen = 0;
+var inputValid = true;
 
 function hasClass(element, cls) {
     return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
@@ -13,6 +16,15 @@ function handleInputInfo(inputInfo) {
     var table = document.getElementById('inputMap');
     var inputButtons = document.getElementById('inputButtons');
     var sortedInputInfo = Object.keys(inputInfo).sort();
+    var longestCharNum = 0;
+    for( var j = 0; j < sortedInputInfo.length; j++) {
+        var maxkeyval = Math.max(sortedInputInfo[j].length, inputInfo[sortedInputInfo[j]]['value'].length);
+        if (maxkeyval > longestCharNum) {
+            longestCharNum = maxkeyval;
+        }
+    }
+    console.log(longestCharNum);
+
     for( var i = 0; i < sortedInputInfo.length; i++)
     {
         var info = inputInfo[sortedInputInfo[i]];
@@ -32,7 +44,9 @@ function handleInputInfo(inputInfo) {
         inputButton.setAttribute('data-value',info['value']);
         inputButton.setAttribute('data-id',info['id']);
         inputButton.setAttribute('data-name',sortedInputInfo[i]);
-        inputButton.textContent = sortedInputInfo[i] + '\n(' + info['value'] + ')'
+        inputButton.textContent = sortedInputInfo[i] + '\n(' + info['value'] + ')';
+        inputButton.style.width = longestCharNum.toString() + "em";
+
         if( inputInfo[sortedInputInfo[i]]['value'] != "" )
         {
             inputButton.onclick = operationClick;
@@ -51,11 +65,20 @@ function handleInputInfo(inputInfo) {
 function calculateInput() {
     var calculate = document.getElementById('inputField').value;
     var result = "";
-    try {
-        result = eval(calculate);
-    }
-    catch(err) {
-        console.log(err);
+    inputValid = true;
+    if (numLeftParen == numRightParen) {
+        try {
+            result = eval(calculate);
+        }
+        catch(err) {
+            console.log(err);
+            operatorExpected = false;
+            inputValid = false;
+        }
+    } else {
+        result = "Mismatched Parentheses Error";
+        operatorExpected = false;
+        inputValid = false;
     }
     document.getElementById('inputField').value = result;
 }
@@ -123,15 +146,21 @@ function operationClick() {
             calculateInput();
             toggleOutput(true);
             operatorExpected = true;
+            numLeftParen = 0;
+            numRightParen = 0;
             break;
         case "(":
             if (!operatorExpected) {
                 inputField.value += " " + operatorValue;
+                operatorExpected = true;
+                numLeftParen++;
             }
             break;
         case ")":
             if (operatorExpected) {
                 inputField.value += " " + operatorValue;
+                operatorExpected = false;
+                numRightParen++;
             }
             break;
         case "+":
@@ -145,16 +174,21 @@ function operationClick() {
             }
             break;            
         case "DEL":
-            var lastOperation = inputField.value.lastIndexOf(" ");
-            if(lastOperation > -1)
-            {
-                inputField.value = inputField.value.substr(0,lastOperation);
-                operatorExpected = !operatorExpected; // invariant value and operator alternate
+            if (inputValid) {
+                var lastOperation = inputField.value.lastIndexOf(" ");
+                if(lastOperation > -1)
+                {
+                    inputField.value = inputField.value.substr(0,lastOperation);
+                    operatorExpected = !operatorExpected; // invariant value and operator alternate
+                }
             }
             break;
         case "CLEAR":
             inputField.value = "";
             operatorExpected = false;
+            inputValid = true;
+            numLeftParen = 0;
+            numRightParen = 0;
             break;
         case "SEND":
             var operations = document.getElementsByClassName('operation');
@@ -177,9 +211,13 @@ function operationClick() {
             {
                 inputField.value = ""; //clear user calculated value
                 operatorExpected = false;
+                inputValid = true;
                 toggleOutput(false);
+                //console.log("clear for some reason");
             }
+
             if (!operatorExpected) {
+                //console.log("clicked a number");
                 inputField.value += " " + operatorValue;
                 operatorExpected = true;
             }

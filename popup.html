@@ -67,6 +67,9 @@
     .inactive:hover {
         opacity: .85;
     }
+    .target {
+        background-color: green;
+    }
     /* ID Styles */
     #inputField {
         text-align: right;
@@ -90,12 +93,10 @@
                 <button id="delete" data-value="DEL" class="operation operator">DEL</button>
                 <button id="clear" data-value="CLEAR" class="operation operator">CLEAR</button>
                 <button id="calculate" data-value="=" class="equals operation operator"></button>
+                <button id="sendOutput" data-value="SEND" class="operation operator">SEND</button>
             </div>
             <div id="inputButtons" class="operations"></div>
             <br/>
-            <button id="sendOutput" class="operation">Send Output to:</button>
-            <select id="outputDropdown" class="dropdown">
-            </select>
             <br>
             For Debug Only:
             <table id="inputMap">

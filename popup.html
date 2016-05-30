@@ -48,8 +48,23 @@
     .divide {
         background-image: url(img/divide.png);
     }
+    .lparen {
+        background-image: url(img/lparen.png);
+    }
+    .rparen {
+        background-image: url(img/rparen.png);
+    }
     .equals {
         background-image: url(img/equals.png);
+    }
+    .delete {
+        background-image: url(img/delete.png);
+    }
+    .clear {
+        background-image: url(img/clear.png);
+    }
+    .send {
+        background-image: url(img/send.png);
     }
     .clicked {
         -webkit-box-shadow: inset 1x 2px 2px 0 #34393C;
@@ -91,12 +106,12 @@
                 <button id="subtract" data-value="-" class="subtract operation operator"></button>
                 <button id="multiply" data-value="*" class="multiply operation operator"></button>
                 <button id="divide" data-value="/" class="divide operation operator"></button>
-                <button id="lparen" data-value="(" class="rparen operation operator">(</button>
-                <button id="rparen" data-value=")" class="lparen operation operator">)</button>
-                <button id="delete" data-value="DEL" class="operation operator">DEL</button>
-                <button id="clear" data-value="CLEAR" class="operation operator">CLEAR</button>
+                <button id="lparen" data-value="(" class="lparen operation operator"></button>
+                <button id="rparen" data-value=")" class="rparen operation operator"></button>
+                <button id="delete" data-value="DEL" class="delete operation operator"></button>
+                <button id="clear" data-value="CLEAR" class="clear operation operator"></button>
                 <button id="calculate" data-value="=" class="equals operation operator"></button>
-                <button id="sendOutput" data-value="SEND" class="operation operator">SEND</button>
+                <button id="sendOutput" data-value="SEND" class="send operation operator"></button>
             </div>
             <div id="inputButtons" class="operations"></div>
             <br/>

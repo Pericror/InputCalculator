@@ -152,14 +152,14 @@ function operationClick() {
         case "(":
             if (!operatorExpected) {
                 inputField.value += " " + operatorValue;
-                operatorExpected = true;
+                operatorExpected = false;
                 numLeftParen++;
             }
             break;
         case ")":
             if (operatorExpected) {
                 inputField.value += " " + operatorValue;
-                operatorExpected = false;
+                operatorExpected = true;
                 numRightParen++;
             }
             break;

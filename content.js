@@ -29,13 +29,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                                                         return (x.className.indexOf('integer') != -1 
                                                         || x.className.indexOf('decimal') !=-1)
                                                     });
-
                 var inputInfo = {};
                 for( var i = 0; i < validInputs.length; i++)
                 {
                     var incidentName = validInputs[i].id.split(".")[1]
                     var container = doc.getElementById('element.incident.'+incidentName);
-                    var inputName = container.getElementsByClassName("label-text")[0].textContent;
+                    var inputName = container.getElementsByClassName('label-text')[0].textContent;
                     var info = {}
                     info['value'] = validInputs[i].value;
                     info['id'] = validInputs[i].id;
@@ -47,10 +46,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             
             // Request from popup.js to update input value
             case 'OutputInfo':
-                var doc = window.frames["gsft_main"].document;
+                var doc = window.frames['gsft_main'].document;
                 var outputField = doc.getElementById(request.outputId);
+                if(request.outputId.indexOf('integer' > 0))
+                {
+                    request.outputValue = request.outputValue.split(".")[0];
+                }
                 outputField.value = request.outputValue;
-                sendResponse({success: true});
+                sendResponse({success: true, newValue: outputField.value});
                 break;
  
             default:

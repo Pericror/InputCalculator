@@ -15,11 +15,12 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
-        <div class="content">
-            <h3 style="font-weight:bold; text-align:center;">Input Calculator</h3>
-            <br/>
+        <div id="error">
+        <b>Input Calculator Unavailable</b><br/>No numerical inputs found on current page.
+        </div>
+        <div id="content">
             <input type="text" id="inputField" readonly></input>            
-            <div class="operations">
+            <div id="defaultButtons" class="operations">
                 <button id="add" data-value="+" class="add operation operator"></button>
                 <button id="subtract" data-value="-" class="subtract operation operator"></button>
                 <button id="multiply" data-value="*" class="multiply operation operator"></button>
@@ -32,6 +33,7 @@
                 <button id="sendOutput" data-value="SEND" class="send operation operator"></button>
             </div>
             <div id="inputButtons" class="operations"></div>
-        </div>      
+        </div>
+        <div id="footer">Input Calculator powered by <a href="">Pericror</a></div>        
     </body>
 </html>

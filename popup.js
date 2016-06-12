@@ -19,47 +19,70 @@ function hasClass(element, cls) {
     return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
 }
 
+// Toggle whether or not the calculator has input available
+function toggleError(toggle) {
+    if(toggle)
+    {
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('content').style.display = 'none';
+        document.getElementById('footer').style.display = 'none';
+    }
+    else
+    {
+        document.getElementById('error').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+        document.getElementById('footer').style.display = 'block';
+    }
+}
+
 // Handles input info from the content script
 function handleInputInfo(inputInfo) {
-
     var inputButtons = document.getElementById('inputButtons');
     var sortedInputInfo = Object.keys(inputInfo).sort();
     var maxCharLen = 0;
-    
-    // Get the character width of the longest input name or value
-    for( var j = 0; j < sortedInputInfo.length; j++) {
-        var checkMax = Math.max(sortedInputInfo[j].length, inputInfo[sortedInputInfo[j]]['value'].length);
-        if (checkMax > maxCharLen) {
-            maxCharLen = checkMax;
-        }
-    }
 
-    // Dynamically generate button for every input field
-    for( var i = 0; i < sortedInputInfo.length; i++)
+    if(sortedInputInfo.length > 0)
     {
-        var info = inputInfo[sortedInputInfo[i]];
-        var inputButton = document.createElement('button');
-        
-        inputButton.className = 'operation';
-        inputButton.setAttribute('data-value',info['value']);
-        inputButton.setAttribute('data-id',info['id']);
-        inputButton.setAttribute('data-name',sortedInputInfo[i]);
-        inputButton.textContent = sortedInputInfo[i] + '\n(' + info['value'] + ')';
-        inputButton.style.width = maxCharLen.toString() + "em";
+        toggleError(false);
 
-        if( inputInfo[sortedInputInfo[i]]['value'] != "" )
-        {
-            inputButton.onclick = operationClick;
-            inputButton.setAttribute('data-state', 'active');
+        // Get the character width of the longest input name or value
+        for( var j = 0; j < sortedInputInfo.length; j++) {
+            var checkMax = Math.max(sortedInputInfo[j].length, inputInfo[sortedInputInfo[j]]['value'].length);
+            if (checkMax > maxCharLen) {
+                maxCharLen = checkMax;
+            }
         }
-        else // cannot select inputs with no value entered
+
+        // Dynamically generate button for every input field
+        for( var i = 0; i < sortedInputInfo.length; i++)
         {
-            inputButton.classList.add('inactive');
-            inputButton.setAttribute('data-state', 'inactive');
+            var info = inputInfo[sortedInputInfo[i]];
+            var inputButton = document.createElement('button');
+            
+            inputButton.className = 'operation';
+            inputButton.setAttribute('data-value',info['value']);
+            inputButton.setAttribute('data-id',info['id']);
+            inputButton.setAttribute('data-name',sortedInputInfo[i]);
+            inputButton.textContent = sortedInputInfo[i] + '\n(' + info['value'] + ')';
+            inputButton.style.width = maxCharLen.toString() + "em";
+
+            if( inputInfo[sortedInputInfo[i]]['value'] != "" )
+            {
+                inputButton.onclick = operationClick;
+                inputButton.setAttribute('data-state', 'active');
+            }
+            else // cannot select inputs with no value entered
+            {
+                inputButton.classList.add('inactive');
+                inputButton.setAttribute('data-state', 'inactive');
+            }
+            inputButtons.appendChild(inputButton);
         }
-        inputButtons.appendChild(inputButton);
     }
-   
+    else // no numerical input found on current page
+    {
+        toggleError(true);
+    }
 }
 
 // Handles the equals operator to calculate the current expression
@@ -94,6 +117,21 @@ function sendOutput(id) {
                                         outputId: id,
                                         outputValue: output}, 
                                 function(response) {
+                                    if( response.success )
+                                    {
+                                        var operation = document.querySelectorAll('[data-id="'+id+'"]')[0];
+                                        // Update the target input operator button with new value 
+                                        if(response.newValue != "")
+                                        {
+                                                operation.setAttribute('data-state', 'active');                 
+                                        }
+                                        else
+                                        {
+                                                operation.setAttribute('data-state', 'inactive');                       
+                                        }
+                                        operation.textContent = operation.getAttribute('data-name') + '\n(' + response.newValue + ')';
+                                        operation.setAttribute('data-value', response.newValue);
+                                    }
                                 });
     });
 }
@@ -102,19 +140,6 @@ function sendOutput(id) {
 function handleSend(operation)
 {
     sendOutput(operation.getAttribute('data-id'));
-    
-    //Update the target input operator button with new value 
-    var newValue = document.getElementById('inputField').value;
-    if(newValue != "")
-    {
-            operation.setAttribute('data-state', 'active');                 
-    }
-    else
-    {
-            operation.setAttribute('data-state', 'inactive');                       
-    }
-    operation.textContent = operation.getAttribute('data-name') + '\n(' + newValue + ')';
-    operation.setAttribute('data-value', newValue);
     
     //Restore operation buttons to previous state
     var operations = document.getElementsByClassName('operation');
@@ -148,38 +173,38 @@ function operationClick() {
     var inputField = document.getElementById('inputField');
     switch( operatorValue)
     {
-        case "=":
+        case '=':
             calculateInput();
             toggleOutput(true);
             operatorExpected = true;
             numLeftParen = 0;
             numRightParen = 0;
             break;
-        case "(":
+        case '(':
             if (!operatorExpected) {
                 inputField.value += " " + operatorValue;
                 operatorExpected = false;
                 numLeftParen++;
             }
             break;
-        case ")":
+        case ')':
             if (operatorExpected) {
                 inputField.value += " " + operatorValue;
                 operatorExpected = true;
                 numRightParen++;
             }
             break;
-        case "+":
-        case "-":
-        case "/":
-        case "*":
+        case '+':
+        case '-':
+        case '/':
+        case '*':
             if(inputField.value != "" && operatorExpected)
             {
                 inputField.value += " " + operatorValue;
                 operatorExpected = false;
             }
             break;            
-        case "DEL":
+        case 'DEL':
             if (inputValid) {
                 var lastOperation = inputField.value.lastIndexOf(" ");
                 if(lastOperation > -1)
@@ -189,14 +214,14 @@ function operationClick() {
                 }
             }
             break;
-        case "CLEAR":
+        case 'CLEAR':
             inputField.value = "";
             operatorExpected = false;
             inputValid = true;
             numLeftParen = 0;
             numRightParen = 0;
             break;
-        case "SEND":
+        case 'SEND':
             var operations = document.getElementsByClassName('operation');
             for(var i = 0; i < operations.length; i++) {
                 if(!hasClass(operations[i], 'operator'))
@@ -209,11 +234,11 @@ function operationClick() {
             }
             break;            
         default: // non-operator button
-            if(lastButtonPressed == "SEND")
+            if(lastButtonPressed == 'SEND')
             {
                 handleSend(operation);
             }
-            else if(lastButtonPressed == "=")
+            else if(lastButtonPressed == '=')
             {
                 inputField.value = ""; //clear user calculated value
                 operatorExpected = false;
@@ -228,9 +253,9 @@ function operationClick() {
             break;
     }
     
-    if( lastButtonPressed == "SEND" )
+    if( lastButtonPressed == 'SEND' )
     {
-        lastButtonPressed = "=";
+        lastButtonPressed = '=';
     }
     else
     {
@@ -253,6 +278,14 @@ function toggleOutput(toggle) {
     
 }
 
+// Load page in new tab
+function loadPage() {
+    chrome.runtime.sendMessage({
+        from:    'popup',
+        subject: 'showLink'
+    });
+}
+
 // Setup click handlers
 window.onload = function(){
     var operations = document.getElementsByClassName('operation');
@@ -260,6 +293,7 @@ window.onload = function(){
         operations[i].onclick = operationClick;
     }
     toggleOutput(false);
+    document.getElementsByTagName("a")[0].onclick = loadPage;
 }
 
 // Request input info from the content script when the page has loaded

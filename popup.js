@@ -1,51 +1,51 @@
-/* operatorExpected = false for expecting an input value / paren, true for expecting an operator*/
+/*******************************************************************************
+*
+* Input Calculator Popup JS
+* ___________________________
+* [2016] Pericror
+* All Rights Reserved
+* Use of this source code is governed by the license found in the LICENSE file.
+*/
+
+/* operatorExpected = false for expecting an input value / paren, true for expecting an operator */
 var operatorExpected = false;
-var lastButtonPressed = ""; // The data-value of the last button pressed
+var lastButtonPressed = ""; // the data-value of the last button pressed
 var numLeftParen = 0;
 var numRightParen = 0;
 var inputValid = true;
 
+// Returns true if an element has a given class name
 function hasClass(element, cls) {
     return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
 }
 
 // Handles input info from the content script
 function handleInputInfo(inputInfo) {
-    console.log(inputInfo);
 
-    var table = document.getElementById('inputMap');
     var inputButtons = document.getElementById('inputButtons');
     var sortedInputInfo = Object.keys(inputInfo).sort();
-    var longestCharNum = 0;
+    var maxCharLen = 0;
+    
+    // Get the character width of the longest input name or value
     for( var j = 0; j < sortedInputInfo.length; j++) {
-        var maxkeyval = Math.max(sortedInputInfo[j].length, inputInfo[sortedInputInfo[j]]['value'].length);
-        if (maxkeyval > longestCharNum) {
-            longestCharNum = maxkeyval;
+        var checkMax = Math.max(sortedInputInfo[j].length, inputInfo[sortedInputInfo[j]]['value'].length);
+        if (checkMax > maxCharLen) {
+            maxCharLen = checkMax;
         }
     }
-    console.log(longestCharNum);
 
+    // Dynamically generate button for every input field
     for( var i = 0; i < sortedInputInfo.length; i++)
     {
         var info = inputInfo[sortedInputInfo[i]];
-        
-        //table start logic
-        var row = table.insertRow(table.rows.length);
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-        cell1.innerHTML = sortedInputInfo[i];
-        cell2.innerHTML = info['id'];
-        cell3.innerHTML = info['value'];
-        //table end logic
-        
         var inputButton = document.createElement('button');
+        
         inputButton.className = 'operation';
         inputButton.setAttribute('data-value',info['value']);
         inputButton.setAttribute('data-id',info['id']);
         inputButton.setAttribute('data-name',sortedInputInfo[i]);
         inputButton.textContent = sortedInputInfo[i] + '\n(' + info['value'] + ')';
-        inputButton.style.width = longestCharNum.toString() + "em";
+        inputButton.style.width = maxCharLen.toString() + "em";
 
         if( inputInfo[sortedInputInfo[i]]['value'] != "" )
         {
@@ -62,6 +62,7 @@ function handleInputInfo(inputInfo) {
    
 }
 
+// Handles the equals operator to calculate the current expression
 function calculateInput() {
     var calculate = document.getElementById('inputField').value;
     var result = "";
@@ -83,6 +84,7 @@ function calculateInput() {
     document.getElementById('inputField').value = result;
 }
 
+// Handles passing the new input value to the content js
 function sendOutput(id) {
     var output = document.getElementById('inputField').value;
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -92,16 +94,16 @@ function sendOutput(id) {
                                         outputId: id,
                                         outputValue: output}, 
                                 function(response) {
-                                    console.log("popup.js response to sendoutput");
-                                    console.log("Success: " + response.success.toString());
                                 });
     });
 }
 
+// Handles the save operator to send the new input value to a target input
 function handleSend(operation)
 {
     sendOutput(operation.getAttribute('data-id'));
-    //Update button
+    
+    //Update the target input operator button with new value 
     var newValue = document.getElementById('inputField').value;
     if(newValue != "")
     {
@@ -134,10 +136,14 @@ function handleSend(operation)
     }
 }
 
+// Handles all calculator button operation clicks
 function operationClick() {
-    var operation = this;
+    var operation = this; // references button element clicked
+    
+    // Create button press effect
     operation.classList.add('clicked');
     setTimeout(function(){ operation.classList.remove('clicked')}, 200);
+    
     var operatorValue = operation.getAttribute('data-value');
     var inputField = document.getElementById('inputField');
     switch( operatorValue)
@@ -213,11 +219,9 @@ function operationClick() {
                 operatorExpected = false;
                 inputValid = true;
                 toggleOutput(false);
-                //console.log("clear for some reason");
             }
 
             if (!operatorExpected) {
-                //console.log("clicked a number");
                 inputField.value += " " + operatorValue;
                 operatorExpected = true;
             }
@@ -234,6 +238,7 @@ function operationClick() {
     }
 }
 
+// Toggle whether or not the save button is enabled
 function toggleOutput(toggle) {
     if(toggle)
     {

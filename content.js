@@ -1,3 +1,12 @@
+/*******************************************************************************
+*
+* Input Calculator Content JS
+* ___________________________
+* [2016] Pericror
+* All Rights Reserved
+* Use of this source code is governed by the license found in the LICENSE file.
+*/
+
 // Tell the background page to show the page action
 chrome.runtime.sendMessage({
     from:    'content',
@@ -10,6 +19,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     {
         switch(request.subject)
         {
+            // Request from popup.js to send input info
             case 'InputInfo':
                 var doc = window.frames["gsft_main"].document;
 
@@ -32,11 +42,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                     inputInfo[inputName] = info;
                 }
 
-                console.log(inputInfo);
-
                 sendResponse(inputInfo);
                 break;
-                
+            
+            // Request from popup.js to update input value
             case 'OutputInfo':
                 var doc = window.frames["gsft_main"].document;
                 var outputField = doc.getElementById(request.outputId);

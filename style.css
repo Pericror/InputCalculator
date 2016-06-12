@@ -1,0 +1,100 @@
+/*******************************************************************************
+*
+* Input Calculator Stylesheet
+* ___________________________
+* [2016] Pericror
+* All Rights Reserved
+* Use of this source code is governed by the license found in the LICENSE file.
+*/
+body {
+    background-color: black;
+    color: white;
+    overflow: hidden;
+}
+/* Class styles */
+.content {
+    width: 750px;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+.operation {
+    background-color: #2699E7;
+    border: none;
+    background-size: 30px;
+    opacity: .85;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 15px;
+    border-radius: 3px;
+    font-weight: bold;
+    white-space:pre-wrap;
+}
+
+.operator {
+    width: 30px;
+    height: 30px;
+}
+.operation:hover {
+    opacity: 1;
+}
+.add {
+    background-image: url(img/add.png);
+}
+.subtract {
+    background-image: url(img/subtract.png);
+}
+.multiply {
+    background-image: url(img/multiply.png);
+}
+.divide {
+    background-image: url(img/divide.png);
+}
+.lparen {
+    background-image: url(img/lparen.png);
+}
+.rparen {
+    background-image: url(img/rparen.png);
+}
+.equals {
+    background-image: url(img/equals.png);
+}
+.delete {
+    background-image: url(img/delete.png);
+}
+.clear {
+    background-image: url(img/clear.png);
+}
+.send {
+    background-image: url(img/send.png);
+}
+.clicked {
+    -webkit-box-shadow: inset 1x 2px 2px 0 #34393C;
+    -moz-box-shadow: inset 1px 2px 2px 0 #34393C;
+    box-shadow: inset 1px 2px 2px 0 #34393C;
+}
+.operations {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+.dynamicbtn {
+    background: #2699E7; /*#0000ff*/
+}
+.inactive {
+    background-color: grey;
+}
+.inactive:hover {
+    opacity: .85;
+}
+.target {
+    background-color: #3EAF04;
+}
+/* ID Styles */
+#inputField {
+    text-align: right;
+    width: 600px;
+    font-size: 1.5em;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}

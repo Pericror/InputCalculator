@@ -7,7 +7,7 @@
 * Use of this source code is governed by the license found in the LICENSE file.
 */
 body {
-    background-color: black;
+    background-color: white;
     overflow: hidden;
 }
 a:link,
@@ -25,9 +25,9 @@ a:active {
     margin-left: 15px;
     margin-right: 15px;
     margin-top: 15px;
-    -webkit-border-radius: 3px; 
-    -moz-border-radius: 3px; 
-    border-radius: 3px;
+    -webkit-border-radius: 5px; 
+    -moz-border-radius: 5px; 
+    border-radius: 5px;
     font-weight: bold;
     white-space:pre-wrap;
 }

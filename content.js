@@ -48,7 +48,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             case 'OutputInfo':
                 var doc = window.frames['gsft_main'].document;
                 var outputField = doc.getElementById(request.outputId);
-                if(request.outputId.indexOf('integer' > 0))
+                if(request.outputId.indexOf('integer') > 0)
                 {
                     request.outputValue = request.outputValue.split(".")[0];
                 }

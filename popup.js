@@ -63,7 +63,12 @@ function handleInputInfo(inputInfo) {
             inputButton.setAttribute('data-value',info['value']);
             inputButton.setAttribute('data-id',info['id']);
             inputButton.setAttribute('data-name',sortedInputInfo[i]);
-            inputButton.textContent = sortedInputInfo[i] + '\n(' + info['value'] + ')';
+            inputValue = '(' + info['value'] + ')';
+            if( info['value'] === '' )
+            {
+                inputValue = ' ';
+            }
+            inputButton.innerHTML = sortedInputInfo[i] + '<br/>' + inputValue;
             inputButton.style.width = maxCharLen.toString() + "em";
 
             if( inputInfo[sortedInputInfo[i]]['value'] != "" )

@@ -16,7 +16,7 @@
     </head>
     <body>
         <div id="error">
-        <b>Input Calculator Unavailable</b><br/>No numerical inputs found on current page.
+        <b>Input Calculator Unavailable</b><br/>No supported inputs found on current page.
         </div>
         <div id="content">
             <input type="text" id="inputField" readonly></input>            
@@ -32,6 +32,19 @@
                 <button id="calculate" data-value="=" class="equals operation operator"></button>
                 <button id="sendOutput" data-value="SEND" class="send operation operator"></button>
             </div>
+            <div id="defaultButtons" class="operations">
+                <button data-value="0" class="operation operator standard">.</button>            
+                <button data-value="0" class="operation operator standard">0</button>
+                <button data-value="1" class="operation operator standard">1</button>
+                <button data-value="2" class="operation operator standard">2</button>
+                <button data-value="3" class="operation operator standard">3</button>
+                <button data-value="4" class="operation operator standard">4</button>
+                <button data-value="5" class="operation operator standard">5</button>
+                <button data-value="6" class="operation operator standard">6</button>
+                <button data-value="7" class="operation operator standard">7</button>
+                <button data-value="8" class="operation operator standard">8</button>
+                <button data-value="9" class="operation operator standard">9</button>
+            </div>            
             <div id="inputButtons" class="operations"></div>
         </div>
         <div id="footer">Input Calculator powered by <a href="">Pericror</a></div>        

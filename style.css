@@ -36,6 +36,12 @@ a:active {
     width: 30px;
     height: 30px;
 }
+
+.standard {
+    margin-left: 12px;
+    margin-right: 12px;
+}
+}
 .operation:hover {
     opacity: 1;
 }

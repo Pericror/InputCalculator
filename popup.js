@@ -7,12 +7,11 @@
 * Use of this source code is governed by the license found in the LICENSE file.
 */
 
-/* operatorExpected = false for expecting an input value / paren, true for expecting an operator */
+// operatorExpected = false for expecting an input value / paren, true for expecting an operator
 var operatorExpected = false;
 var lastButtonPressed = ""; // the data-value of the last button pressed
 var numLeftParen = 0;
 var numRightParen = 0;
-var inputValid = true;
 
 // Returns true if an element has a given class name
 function hasClass(element, cls) {
@@ -54,7 +53,7 @@ function handleInputInfo(inputInfo) {
         }
 
         // Dynamically generate button for every input field
-        for( var i = 0; i < sortedInputInfo.length; i++)
+        for(var i = 0; i < sortedInputInfo.length; i++)
         {
             var info = inputInfo[sortedInputInfo[i]];
             var inputButton = document.createElement('button');
@@ -94,25 +93,34 @@ function handleInputInfo(inputInfo) {
 function calculateInput() {
     var calculate = document.getElementById('inputField').value;
     var result = "";
-    inputValid = true;
+    var inputValid = true;
     if (numLeftParen == numRightParen) {
         try {
             result = eval(calculate);
+            if(result == undefined)
+            {
+                result = "";
+                operatorExpected = false;
+                inputValid = false;
+            }
         }
         catch(err) {
             console.log(err);
+            result = ("Error: Invalid Expression Entered.")
             operatorExpected = false;
             inputValid = false;
         }
     } else {
-        result = "Mismatched Parentheses Error";
+        result = "Error: Mismatched Parentheses.";
         operatorExpected = false;
         inputValid = false;
     }
     document.getElementById('inputField').value = result;
+    return inputValid;
 }
 
 // Handles passing the new input value to the content js
+// Updates the output operator with the new value and sets it an an active state
 function sendOutput(id) {
     var output = document.getElementById('inputField').value;
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -137,16 +145,14 @@ function sendOutput(id) {
                                         operation.textContent = operation.getAttribute('data-name') + '\n(' + response.newValue + ')';
                                         operation.setAttribute('data-value', response.newValue);
                                     }
+                                    restoreActiveStates();
                                 });
     });
 }
 
-// Handles the save operator to send the new input value to a target input
-function handleSend(operation)
+//Restore operation buttons to their original data-state
+function restoreActiveStates()
 {
-    sendOutput(operation.getAttribute('data-id'));
-    
-    //Restore operation buttons to previous state
     var operations = document.getElementsByClassName('operation');
     for(var i = 0; i < operations.length; i++) {
         if(!hasClass(operations[i], 'operator'))
@@ -155,11 +161,11 @@ function handleSend(operation)
             if(operations[i].getAttribute('data-state') == 'active')
             {
                 operations[i].onclick = operationClick;
+                operations[i].classList.remove('inactive');               
             }
             else
             {
                 operations[i].onclick = function(){};
-                operations[i].classList.remove('active');
                 operations[i].classList.add('inactive');
             }
         }
@@ -176,24 +182,29 @@ function operationClick() {
     
     var operatorValue = operation.getAttribute('data-value');
     var inputField = document.getElementById('inputField');
-    switch( operatorValue)
+    switch(operatorValue)
     {
         case '=':
-            calculateInput();
-            toggleOutput(true);
+            var inputValid = calculateInput();
+            if (inputValid)
+            {
+                toggleOutput(true);
+            }
             operatorExpected = true;
             numLeftParen = 0;
             numRightParen = 0;
             break;
         case '(':
-            if (!operatorExpected) {
+            if (!operatorExpected)
+            {
                 inputField.value += " " + operatorValue;
                 operatorExpected = false;
                 numLeftParen++;
             }
             break;
         case ')':
-            if (operatorExpected) {
+            if (operatorExpected && numLeftParen < numRightParen)
+            {
                 inputField.value += " " + operatorValue;
                 operatorExpected = true;
                 numRightParen++;
@@ -210,21 +221,19 @@ function operationClick() {
             }
             break;            
         case 'DEL':
-            if (inputValid) {
-                var lastOperation = inputField.value.lastIndexOf(" ");
-                if(lastOperation > -1)
-                {
-                    inputField.value = inputField.value.substr(0,lastOperation);
-                    operatorExpected = !operatorExpected; // invariant value and operator alternate
-                }
+            var lastOperation = inputField.value.lastIndexOf(" ");
+            if(lastOperation > -1)
+            {
+                inputField.value = inputField.value.substr(0,lastOperation);
+                operatorExpected = !operatorExpected; // invariant value and operator alternate
             }
             break;
         case 'CLEAR':
             inputField.value = "";
             operatorExpected = false;
-            inputValid = true;
             numLeftParen = 0;
             numRightParen = 0;
+            toggleOutput(false);
             break;
         case 'SEND':
             var operations = document.getElementsByClassName('operation');
@@ -233,7 +242,6 @@ function operationClick() {
                 {
                     operations[i].classList.add('target');
                     operations[i].classList.remove('inactive');
-                    operations[i].classList.add('active');
                     operations[i].onclick = operationClick;
                 }
             }
@@ -241,13 +249,12 @@ function operationClick() {
         default: // non-operator button
             if(lastButtonPressed == 'SEND')
             {
-                handleSend(operation);
+                sendOutput(operation.getAttribute('data-id'));
             }
             else if(lastButtonPressed == '=')
             {
-                inputField.value = ""; //clear user calculated value
+                inputField.value = ""; // clear user calculated value
                 operatorExpected = false;
-                inputValid = true;
                 toggleOutput(false);
             }
 
@@ -260,7 +267,7 @@ function operationClick() {
     
     if( lastButtonPressed == 'SEND' )
     {
-        lastButtonPressed = '=';
+        lastButtonPressed = '='; // allows sending output to multiple fields
     }
     else
     {

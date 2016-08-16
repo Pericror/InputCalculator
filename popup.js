@@ -65,7 +65,7 @@ function handleInputInfo(inputInfo) {
             inputValue = '(' + info['value'] + ')';
             if( info['value'] === '' )
             {
-                inputValue = ' ';
+                inputValue = '(Empty)';
             }
             inputButton.innerHTML = sortedInputInfo[i] + '<br/>' + inputValue;
             inputButton.style.width = maxCharLen.toString() + "em";

@@ -77,7 +77,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 var doc = window.frames['gsft_main'].document;
                 var outputField = doc.getElementById(request.outputId);
                 var newVal = request.outputValue;
-                if(request.outputId.indexOf('int') > 0) // will not work for custom field names
+                if(request.outputId.indexOf('integer') > 0) // will not work for custom field names
                 {
                     outputField.value = request.outputValue.split(".")[0]; // round integers
                     newVal = outputField.value;

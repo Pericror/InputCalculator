@@ -51,6 +51,7 @@ function handleInputInfo(inputInfo) {
                 maxCharLen = checkMax;
             }
         }
+        maxCharLen *= 12; //width 12px per char
 
         // Dynamically generate button for every input field
         for(var i = 0; i < sortedInputInfo.length; i++)
@@ -68,7 +69,7 @@ function handleInputInfo(inputInfo) {
                 inputValue = '(Empty)';
             }
             inputButton.innerHTML = sortedInputInfo[i] + '<br/>' + inputValue;
-            inputButton.style.width = maxCharLen.toString() + "em";
+            inputButton.style.width = maxCharLen.toString() + "px";
 
             if( inputInfo[sortedInputInfo[i]]['value'] != "" )
             {
@@ -203,7 +204,7 @@ function operationClick() {
             }
             break;
         case ')':
-            if (operatorExpected && numLeftParen < numRightParen)
+            if (operatorExpected && numLeftParen > numRightParen)
             {
                 inputField.value += " " + operatorValue;
                 operatorExpected = true;

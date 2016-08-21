@@ -11,12 +11,14 @@
 body {
     background-color: white;
     overflow: hidden;
+    font-size: 13px;   
 }
 button {
     font-family: SourceSansPro, "Helvetica Neue", Arial;
-    font-size: 13px;
+    font-size: 13px;    
     line-height: 1.42857;  
 }
+
 a:link,
 a:visited,
 a:hover,
@@ -29,9 +31,9 @@ a:active {
     border: none;
     background-size: 30px;
     opacity: .85;
-    margin-left: 15px;
-    margin-right: 15px;
     margin-top: 10px;
+    margin-left: 7px;
+    margin-right: 7px;
     -webkit-border-radius: 5px; 
     -moz-border-radius: 5px; 
     border-radius: 5px;
@@ -42,6 +44,8 @@ a:active {
 .operator {
     width: 30px;
     height: 30px;
+    margin-left: 15px;    
+    margin-right: 15px;
 }
 
 .operation:hover {
@@ -83,11 +87,7 @@ a:active {
     -moz-box-shadow: inset 1px 2px 2px 0 #34393C;
     box-shadow: inset 1px 2px 2px 0 #34393C;
 }
-.operations {
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-}
+
 .inactive {
     background-color: grey;
 }
@@ -113,17 +113,22 @@ a:active {
 }
 #content {
     display: none;
-    padding-left: 25px;
-    padding-right: 25px;
+    padding-left: 20px;
+    padding-right: 20px;
     margin-top: 20px;
 }
 #defaultButtons {
     width:650px;
+    text-align: center;
+}
+#inputButtons {
+    text-align: center;
 }
 #inputField {
     text-align: right;
     width: 600px;
     font-size: 1.5em;
+    margin-left: 15px;
     margin-left: auto;
     margin-right: auto;
     display: block;
@@ -133,5 +138,6 @@ a:active {
     display: none;
     text-align: center;
     margin-top: 15px;
+    font-size: 13px;
     color: grey;
 }

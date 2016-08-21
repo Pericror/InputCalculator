@@ -13,6 +13,37 @@ chrome.runtime.sendMessage({
     subject: 'showPageAction'
 });
 
+// Determines if an input field is supported
+function supported(elem){
+    var supported = false;
+    // Check for currency/price fields
+    if(elem.className.indexOf('decimal') > -1)
+    {
+        supported = true;
+    }
+    // Only check non hidden numeric fields
+    else if(elem.style.display != 'none' && elem.type != 'hidden')
+    {
+        try
+        {
+            var elemType = elem.parentElement.parentElement.childNodes[0].getAttribute('type');
+            switch(elemType)
+            {
+                case 'integer':
+                case 'decimal':
+                case 'float':
+                case 'longint':
+                    supported = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+        catch(err){} // grandparent element (hidden type field) did not exist
+    }
+    return supported;
+}
+
 // Listen for popup info request or calculation
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if(request.from === 'popup')
@@ -25,47 +56,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
                 var inputElements = doc.querySelectorAll("input");
                 var inputsArray = Array.prototype.slice.call(inputElements);
-                var validInputs = inputsArray.filter(function(x){
-                                                        return (x.className.indexOf('integer') != -1 
-                                                            || x.className.indexOf('decimal') !=-1);
-                                                    });
-                var dateTimeInputs = inputsArray.filter(function(x) {
-                                                        return x.dataset.type != undefined &&
-                                                            x.dataset.type.indexOf('date') > -1;
-                                                    });
-                if(dateTimeInputs.length != 0)
-                {
-                    if(dateTimeInputs[dateTimeInputs.length - 1].id.indexOf('closed_at') > -1)
-                    {
-                        dateTimeInputs.pop(); // remove closure information field
-                    }
-                }
-                validInputs = validInputs.concat(dateTimeInputs);
+                var supportedInputs = inputsArray.filter(supported);
 
                 var inputInfo = {};
-                for(var j = 0; j < validInputs.length; j++)
+                for(var j = 0; j < supportedInputs.length; j++)
                 {
-                    var incidentName = validInputs[j].id.split(".")[1]
+                    var incidentName = supportedInputs[j].id.split(".")[1]
                     var container = doc.getElementById('element.incident.'+incidentName);
                     var inputName = container.getElementsByClassName('label-text')[0].textContent;
                     var info = {};
-                    if(validInputs[j].dataset.type != undefined && 
-                        validInputs[j].dataset.type.indexOf('date') > -1)
-                    {
-                        if(validInputs[j].value != "")
-                        {
-                            info['value'] = Date.parse(validInputs[j].value); // convert date string to number
-                        }
-                        else
-                        {
-                            info['value'] = validInputs[j].value;                            
-                        }
-                    }
-                    else
-                    {
-                        info['value'] = validInputs[j].value.replace(",",""); // remove any ',' chars                        
-                    }
-                    info['id'] = validInputs[j].id;
+                    info['value'] = supportedInputs[j].value.replace(",",""); // remove any ',' chars                        
+                    info['id'] = supportedInputs[j].id;
                     inputInfo[inputName] = info;
                 }
                 
@@ -76,43 +77,21 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             case 'OutputInfo':
                 var doc = window.frames['gsft_main'].document;
                 var outputField = doc.getElementById(request.outputId);
-                var newVal = request.outputValue;
-                if(request.outputId.indexOf('integer') > 0) // will not work for custom field names
+                var outType = "";
+                try
                 {
-                    outputField.value = request.outputValue.split(".")[0]; // round integers
-                    newVal = outputField.value;
+                    outType = outputField.parentElement.parentElement.childNodes[0].getAttribute('type');
                 }
-                else if(outputField.dataset.type != undefined)
+                catch(err){};
+                if(outType == "integer")
                 {
-                    // Convert date / time objects from milliseconds to human readable string
-                    switch(outputField.dataset.type)
-                    {
-                        case "glide_element_date_time":
-                            var d = new Date(parseFloat(request.outputValue));
-                            outputField.value =  d.getFullYear() + "-" +
-                                                ("0"+(d.getMonth()+1)).slice(-2) + "-" +
-                                                ("0" + d.getDate()).slice(-2) + " " +
-                                                ("0" + d.getHours()).slice(-2) + ":" + 
-                                                ("0" + d.getMinutes()).slice(-2)+ ":" + 
-                                                ("0" + d.getSeconds()).slice(-2);
-                            break;
-                        case "glide_element_date":
-                            var d = new Date(parseFloat(request.outputValue));
-                            outputField.value =  d.getFullYear() + "-" +
-                                                ("0"+(d.getMonth()+1)).slice(-2) + "-" +
-                                                ("0" + d.getDate()).slice(-2);
-                            break;
-                        default:
-                            outputField.value = request.outputValue;
-                            break;
-                        
-                    }
+                        outputField.value = request.outputValue.split(".")[0]; // round integers
                 }
                 else
                 {
-                    outputField.value = request.outputValue;
+                        outputField.value = request.outputValue;
                 }
-                sendResponse({success: true, newValue: newVal});
+                sendResponse({success: true, newValue: outputField.value});
                 break;
  
             default:

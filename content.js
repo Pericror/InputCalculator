@@ -14,7 +14,7 @@ chrome.runtime.sendMessage({
 });
 
 // Determines if an input field is supported
-function supported(elem){
+function supportedField(elem){
     var supported = false;
     // Check for currency/price fields
     if(elem.className.indexOf('decimal') > -1)
@@ -56,7 +56,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
                 var inputElements = doc.querySelectorAll("input");
                 var inputsArray = Array.prototype.slice.call(inputElements);
-                var supportedInputs = inputsArray.filter(supported);
+                var supportedInputs = inputsArray.filter(supportedField);
 
                 var inputInfo = {};
                 for(var j = 0; j < supportedInputs.length; j++)

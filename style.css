@@ -6,7 +6,7 @@
 * All Rights Reserved
 * Use of this source code is governed by the license found in the LICENSE file.
 */
-@import 'https://fonts.googleapis.com/css?family=Source+Sans+Pro';
+@import 'https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700';
 
 body {
     background-color: white;
@@ -14,7 +14,7 @@ body {
     font-size: 13px;   
 }
 button {
-    font-family: SourceSansPro, "Helvetica Neue", Arial;
+    font-family: "Source Sans Pro", "Helvetica Neue", Arial;
     font-size: 13px;    
     line-height: 1.42857;  
 }
@@ -101,6 +101,7 @@ a:active {
 #error
 {
     display: none;
+    font-family: "Source Sans Pro", "Helvetica Neue", Arial;    
     background-color: #fb3f3f;
     color: white;
     padding: 5px;

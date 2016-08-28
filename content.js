@@ -6,12 +6,12 @@
 * All Rights Reserved
 * Use of this source code is governed by the license found in the LICENSE file.
 */
-
-// Tell the background page to show the page action
+/*
+// Tell the background page to show the page action, supported urls defined in manifest file
 chrome.runtime.sendMessage({
     from:    'content',
     subject: 'showPageAction'
-});
+});*/
 
 // Determines if an input field is supported
 function supportedField(elem){

@@ -9,11 +9,20 @@
 
 // Listens for content message to show page action or page
 chrome.runtime.onMessage.addListener(function (msg, sender) {
-    if ((msg.from === 'content') && (msg.subject === 'showPageAction')) {
-        chrome.pageAction.show(sender.tab.id);
+    //if ((msg.from === 'content') && (msg.subject === 'showPageAction')) {
+    //    chrome.pageAction.show(sender.tab.id);
+    //}
+    if ((msg.from === 'popup') && (msg.subject === 'showLink')) {
+        chrome.tabs.create({ url: "http://pericror.com/" });
     }
-    else if ((msg.from === 'popup') && (msg.subject === 'showLink')) {
-          var newURL = "http://pericror.com/";
-          chrome.tabs.create({ url: newURL });
+});
+
+// Updates the page action / fix to keep page action in url bar until chrome moves it out
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    var re = /(https?:\/\/(.+?\.)?service-now\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?)/g; 
+    var exp = new RegExp(re);
+    if(changeInfo.status === "complete" && exp.test(tab.url))
+    {
+        chrome.pageAction.show(tabId);
     }
 });

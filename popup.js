@@ -34,6 +34,23 @@ function toggleError(toggle) {
     }
 }
 
+// Changes all dynamically generated buttons width
+function updateOperationWidth(newValue)
+{
+    var operations = Array.from(document.getElementsByClassName("operation")).filter(function(value) {
+                                                                            return !value.classList.contains("operator");
+                                                                        });
+    var operationWidth = parseInt(operations[0].style.width.replace("px",""));
+    var newWidth = newValue.length * 12; //width 12px per char
+    if( newWidth > operationWidth)
+    {
+        for( var i = 0; i < operations.length; i++)
+        {
+            operations[i].style.width = newWidth.toString() + "px";
+        }
+    }
+}
+
 // Handles input info from the content script
 function handleInputInfo(inputInfo) {
     var inputButtons = document.getElementById('inputButtons');
@@ -143,6 +160,7 @@ function sendOutput(id) {
                                         {
                                                 operation.setAttribute('data-state', 'inactive');                       
                                         }
+                                        updateOperationWidth(response.newValue);                                        
                                         operation.textContent = operation.getAttribute('data-name') + '\n(' + response.newValue + ')';
                                         operation.setAttribute('data-value', response.newValue);
                                     }

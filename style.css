@@ -11,6 +11,7 @@
 body {
     background-color: white;
     overflow: hidden;
+    font-family: "Source Sans Pro", "Helvetica Neue", Arial; 
     font-size: 13px;   
 }
 button {

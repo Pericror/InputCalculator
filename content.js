@@ -65,7 +65,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                     var container = doc.getElementById('element.incident.'+incidentName);
                     var inputName = container.getElementsByClassName('label-text')[0].textContent;
                     var info = {};
-                    info['value'] = supportedInputs[j].value.replace(",",""); // remove any ',' chars                        
+                    info['value'] = supportedInputs[j].value.replace(/[^\d.]/g,""); // remove any non numeric non decimal chars                      
                     info['id'] = supportedInputs[j].id;
                     inputInfo[inputName] = info;
                 }
@@ -85,7 +85,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 catch(err){};
                 if(outType == "integer")
                 {
-                        outputField.value = request.outputValue.split(".")[0]; // round integers
+                        outputField.value = Math.round(parseInt(request.outputValue)).toString(); // round integers
                 }
                 else
                 {

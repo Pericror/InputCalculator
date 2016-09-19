@@ -37,9 +37,9 @@ function toggleError(toggle) {
 // Changes all dynamically generated buttons width
 function updateOperationWidth(newValue)
 {
-    var operations = Array.from(document.getElementsByClassName("operation")).filter(function(value) {
-                                                                            return !value.classList.contains("operator");
-                                                                        });
+    var operations = Array.prototype.slice.call(document.getElementsByClassName("operation")).filter(function(value) {
+                                                                           return !value.classList.contains("operator");
+                                                                       });
     var operationWidth = parseInt(operations[0].style.width.replace("px",""));
     var newWidth = newValue.length * 12; //width 12px per char
     if( newWidth > operationWidth)

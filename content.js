@@ -58,15 +58,22 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 var inputsArray = Array.prototype.slice.call(inputElements);
                 var supportedInputs = inputsArray.filter(supportedField);
 
-                var inputInfo = {};
-                for(var j = 0; j < supportedInputs.length; j++)
+                for(var i = 0; i < supportedInputs.length; i++)
                 {
-                    var incidentName = supportedInputs[j].id.split(".")[1]
+                    if(supportedInputs[i].id.indexOf('.') == -1)
+                    {
+                        continue; // id does not contain incident name
+                    }
+                    var incidentName = supportedInputs[i].id.split(".")[1]
                     var container = doc.getElementById('element.incident.'+incidentName);
+                    if(container == undefined)
+                    {
+                        continue; // not an incident input
+                    }
                     var inputName = container.getElementsByClassName('label-text')[0].textContent;
                     var info = {};
-                    info['value'] = supportedInputs[j].value.replace(/[^\d.]/g,""); // remove any non numeric non decimal chars                      
-                    info['id'] = supportedInputs[j].id;
+                    info['value'] = supportedInputs[i].value.replace(/[^\d.]/g,""); // remove any non numeric non decimal chars                      
+                    info['id'] = supportedInputs[i].id;
                     inputInfo[inputName] = info;
                 }
                 

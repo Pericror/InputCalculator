@@ -148,7 +148,7 @@ function sendOutput(id) {
                                         outputId: id,
                                         outputValue: output}, 
                                 function(response) {
-                                    if( response.success )
+                                    if( response != undefined && response.success )
                                     {
                                         var operation = document.querySelectorAll('[data-id="'+id+'"]')[0];
                                         // Update the target input operator button with new value 

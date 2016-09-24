@@ -24,11 +24,11 @@ a:link,
 a:visited,
 a:hover,
 a:active {
-    color: #2699E7;
+    color: #00AEEF;
 }
 /* Class styles */
 .operation {
-    background-color: #2699E7;
+    background-color: #00AEEF;
     border: none;
     background-size: 30px;
     opacity: .85;

@@ -44,6 +44,20 @@ function supportedField(elem){
     return supported;
 }
 
+// Return the document object containing the inputs
+function getDocument()
+{
+    if(window.frames["gsft_main"] != undefined)
+    {
+        var doc = window.frames["gsft_main"].document
+    }
+    else
+    {
+        var doc = window.document;
+    }
+    return doc;
+}
+
 // Listen for popup info request or calculation
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if(request.from === 'popup')
@@ -52,29 +66,47 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         {
             // Request from popup.js to send input info
             case 'InputInfo':
-                var doc = window.frames["gsft_main"].document;
-
-                var inputElements = doc.querySelectorAll("input");
-                var inputsArray = Array.prototype.slice.call(inputElements);
-                var supportedInputs = inputsArray.filter(supportedField);
-
-                for(var i = 0; i < supportedInputs.length; i++)
+                var inputInfo = {};
+                
+                // Pull table name out of URL
+                if(window.location.href.indexOf("nav_to.do") > -1)
                 {
-                    if(supportedInputs[i].id.indexOf('.') == -1)
+                    var reTableMatch = window.location.href.match("%2F(.*).do%3F");
+                }
+                else
+                {
+                    var reTableMatch = window.location.pathname.match("/(.*).do");
+                }
+                
+                var doc = getDocument();
+                
+                if(reTableMatch != null)
+                {
+                    // Get potential supported numerical input fields
+                    var tableName = reTableMatch[1];
+                    var inputElements = doc.querySelectorAll("input");
+                    var inputsArray = Array.prototype.slice.call(inputElements);
+                    var supportedInputs = inputsArray.filter(supportedField);
+
+                    // Populate inputInfo with data to build buttons
+                    for(var i = 0; i < supportedInputs.length; i++)
                     {
-                        continue; // id does not contain incident name
+                        if(supportedInputs[i].id.indexOf('.') == -1)
+                        {
+                            continue; // id does not contain element name
+                        }
+                        var elementName = supportedInputs[i].id.split(".")[1]
+                        var container = doc.getElementById('element.'+tableName+'.'+elementName);
+                        if(container == undefined)
+                        {
+                            continue; // could not find supported element container
+                        }
+                        var inputName = container.getElementsByClassName('label-text')[0].textContent;
+                        var info = {};
+                        info['value'] = supportedInputs[i].value.replace(/[^\d.]/g,""); // remove any non numeric non decimal chars                      
+                        info['id'] = supportedInputs[i].id;
+                        inputInfo[inputName] = info;
                     }
-                    var incidentName = supportedInputs[i].id.split(".")[1]
-                    var container = doc.getElementById('element.incident.'+incidentName);
-                    if(container == undefined)
-                    {
-                        continue; // not an incident input
-                    }
-                    var inputName = container.getElementsByClassName('label-text')[0].textContent;
-                    var info = {};
-                    info['value'] = supportedInputs[i].value.replace(/[^\d.]/g,""); // remove any non numeric non decimal chars                      
-                    info['id'] = supportedInputs[i].id;
-                    inputInfo[inputName] = info;
                 }
                 
                 sendResponse(inputInfo);
@@ -82,7 +114,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             
             // Request from popup.js to update input value
             case 'OutputInfo':
-                var doc = window.frames['gsft_main'].document;
+                var doc = getDocument();
                 var outputField = doc.getElementById(request.outputId);
                 var outType = "";
                 try

@@ -169,7 +169,7 @@ function sendOutput(id) {
     });
 }
 
-//Restore operation buttons to their original data-state
+// Restore operation buttons to their original data-state
 function restoreActiveStates()
 {
     var operations = document.getElementsByClassName('operation');
@@ -198,6 +198,16 @@ function operationClick() {
     // Create button press effect
     operation.classList.add('clicked');
     setTimeout(function(){ operation.classList.remove('clicked')}, 200);
+    
+    // Ensure operation pressed after 'SEND'
+    if (lastButtonPressed == 'SEND' && hasClass(operation, 'operator'))
+    {
+        restoreActiveStates();
+        lastButtonPressed = '=';
+        operatorExpected = true;
+        toggleOutput(false);
+        return;
+    }
     
     var operatorValue = operation.getAttribute('data-value');
     var inputField = document.getElementById('inputField');

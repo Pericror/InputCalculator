@@ -14,7 +14,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender) {
     //}
     if ((msg.from === 'popup') && (msg.subject === 'showLink')) {
         chrome.tabs.create({
-            url : "https://pericror.com/servicenow"
+            url : "https://www.pericror.com/services/servicenow-consulting/"
         });
     }
 });
